@@ -37,3 +37,4 @@ go.work.sum
 /ExprParser/ExprParserTest/bin/Debug/net8.0
 /ExprParser/ExprParserTest/obj
 /.vs
+/ExprParser/ExprParserTest/bin/Release/net8.0

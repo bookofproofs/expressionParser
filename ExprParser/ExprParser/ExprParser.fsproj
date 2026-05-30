@@ -7,9 +7,6 @@
 
   <ItemGroup>
     <Compile Include="ExpressionParser.fs" />
-    <None Include="Assets\.gitignore" />
-    <None Include="Assets\LICENSE" />
-    <None Include="Assets\README.md" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
