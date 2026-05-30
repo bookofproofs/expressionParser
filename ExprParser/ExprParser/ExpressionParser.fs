@@ -25,6 +25,11 @@ let (<!>) (p: Parser<_,_>) label : Parser<_,_> =
 type Ast =
     | A
     | B
+    | C
+    | D
+    | E
+    | F
+    | G
     | Parens of Ast
     | Prefix of string * Ast
     | Postfix of Ast * string
@@ -77,7 +82,16 @@ let pExpr, pExprRef = createParserForwardedToRef<Ast,unit>()
 // ============================================================================
 
 let pLiteral : Parser<Ast,unit> =
-    (pchar 'a' >>% A)
+    choice [
+        skipChar 'a' >>% A
+        skipChar 'b' >>% B
+        skipChar 'c' >>% C
+        skipChar 'd' >>% D
+        skipChar 'e' >>% E
+        skipChar 'f' >>% F
+        skipChar 'g' >>% G
+    
+    ]
     <|>
     (pchar 'b' >>% B)
 
@@ -163,7 +177,7 @@ let pAtom =
 let pPostfixExprCore : Parser<Ast,unit> =
     pipe2
         pAtom
-        (many (attempt (pNoSpace >>. pPostfixOp)))
+        (many (attempt (pNoSpace >>. pPostfixOp)) <?> "<postfix symbol>")
         (fun expr postfixes ->
             List.fold (fun acc op -> Postfix(acc, op)) expr postfixes
         )
@@ -187,7 +201,7 @@ let pPrefixExpr =
 let pInfixExprCore : Parser<Ast,unit> =
     pipe2
         pPrefixExpr
-        (many (attempt (pSpace >>. pInfixOp .>> pSpace .>>. pPrefixExpr)) <?> "<infix symbol>")
+        (many (attempt (pSpace >>. pInfixOp .>> pSpace .>>. pPrefixExpr)) )
         (fun first rest ->
             List.fold (fun acc (op, rhs) -> Infix(acc, op, rhs)) first rest
         )
