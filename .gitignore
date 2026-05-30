@@ -30,3 +30,9 @@ go.work.sum
 # Editor/IDE
 # .idea/
 # .vscode/
+/.vs
+/ExprParser/.vs/ExprParser
+/ExprParser/ExprParser/obj
+/ExprParser/ExprParser/bin/Debug/net8.0
+/ExprParser/ExprParserTest/bin/Debug/net8.0
+/ExprParser/ExprParserTest/obj
