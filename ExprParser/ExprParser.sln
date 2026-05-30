@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37301.10 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ExprParser", "ExprParser\ExprParser.fsproj", "{0C222974-AE6A-4433-A409-6373AD0C1A62}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ExprParserTest", "ExprParserTest\ExprParserTest.fsproj", "{016047B0-C628-444E-8D80-6397066A2BBE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0C222974-AE6A-4433-A409-6373AD0C1A62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C222974-AE6A-4433-A409-6373AD0C1A62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C222974-AE6A-4433-A409-6373AD0C1A62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C222974-AE6A-4433-A409-6373AD0C1A62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{016047B0-C628-444E-8D80-6397066A2BBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{016047B0-C628-444E-8D80-6397066A2BBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{016047B0-C628-444E-8D80-6397066A2BBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{016047B0-C628-444E-8D80-6397066A2BBE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C1486D89-F68A-485B-BAB9-3D59C01F472C}
+	EndGlobalSection
+EndGlobal
