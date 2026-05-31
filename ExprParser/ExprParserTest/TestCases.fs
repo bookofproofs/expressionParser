@@ -93,6 +93,7 @@ type TestCases () =
     [<DataRow("24", "~!a")>]                // postfix cannot precede prefix
     [<DataRow("25", "a+/b")>]               // infix operator must be surrounded by spaces
     [<DataRow("26", "a +~ b")>]             // invalid infix operator
+    [<DataRow("27", "a(b : c)")>]           // invalid comma / infix operator
     [<TestMethod>]
     member this.TestMethodFailing (no:string, code:string) =
         let res = parse code

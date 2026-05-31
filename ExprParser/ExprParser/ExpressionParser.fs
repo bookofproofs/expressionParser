@@ -114,7 +114,7 @@ let pParens : Parser<Ast,unit> =
 // ============================================================================
 
 let pComma : Parser<unit,unit> = 
-    pOptSpace >>. skipChar ',' >>. pOptSpace <!> "pComma"
+    attempt (pOptSpace >>. skipChar ',' >>. pOptSpace) <!> "pComma"
 
 let pExprList : Parser<Ast list,unit> =
     (pipe2
