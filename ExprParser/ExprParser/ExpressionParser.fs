@@ -92,48 +92,46 @@ let pLiteral : Parser<Ast,unit> =
     
     ] <!> "<pLiteral>"
 
+let pLeftPar : Parser<unit,unit> = 
+    skipChar '(' >>. pOptSpace
+
+let pRightPar : Parser<unit,unit> = 
+    pOptSpace >>. skipChar ')' 
+
+let pLeftBra : Parser<unit,unit> = 
+    skipChar '[' >>. pOptSpace
+
+let pRightBra : Parser<unit,unit> = 
+    pOptSpace >>. skipChar ']' 
+
 // Parenthesized expression, allowing spaces inside
 let pParens : Parser<Ast,unit> =
-    pchar '('
-    >>. pOptSpace
-    >>. pExpr
-    .>> pOptSpace
-    .>> pchar ')'
+    pLeftPar >>. pExpr .>> pRightPar
     |>> Parens <!> "<pParens>"
 
 // ============================================================================
 // Expr list for arguments / coordinates
 // ============================================================================
 
-let pComma : Parser<unit,unit> =
-    pOptSpace >>. pchar ',' >>. pOptSpace
+let pComma : Parser<unit,unit> = 
+    pOptSpace >>. skipChar ',' >>. pOptSpace
 
-let pExprListCore : Parser<Ast list,unit> =
+let pExprList : Parser<Ast list,unit> =
     (pipe2
         pExpr
         (many (attempt (pComma >>. pExpr)))
         (fun first rest -> first :: rest))
-    <|> preturn [] <!> "pExprListCore"
-
-let pExprList = pExprListCore <!> "pExprList"
+    <|> preturn [] <!> "pExprList"
 
 // ============================================================================
 // Call / Coord suffixes on literals (no space allowed before '(' or '[')
 // ============================================================================
 
 let pArgs : Parser<Ast list,unit> =
-    (pchar '('
-     >>. pOptSpace
-     >>. pExprList
-     .>> pOptSpace
-     .>> pchar ')') <!> "pArgs"
+    pLeftPar >>. pExprList .>> pRightPar <!> "pArgs"
 
 let pCoords : Parser<Ast list,unit> =
-    (pchar '['
-     >>. pOptSpace
-     >>. pExprList
-     .>> pOptSpace
-     .>> pchar ']') <!> "pCoords"
+    pLeftBra >>. pExprList .>> pRightBra <!> "pCoords"
 
 let pCallOrCoordSuffixCore : Parser<(Ast -> Ast),unit> =
     pNoSpace >>.
