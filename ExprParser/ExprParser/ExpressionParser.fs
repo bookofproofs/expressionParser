@@ -93,16 +93,16 @@ let pLiteral : Parser<Ast,unit> =
     ] <!> "<pLiteral>"
 
 let pLeftPar : Parser<unit,unit> = 
-    skipChar '(' >>. pOptSpace
+    skipChar '(' >>. pOptSpace <!> "<pLeftPar>"
 
 let pRightPar : Parser<unit,unit> = 
-    pOptSpace >>. skipChar ')' 
+    pOptSpace >>. skipChar ')' <!> "<pRightPar>"
 
 let pLeftBra : Parser<unit,unit> = 
-    skipChar '[' >>. pOptSpace
+    skipChar '[' >>. pOptSpace <!> "<pLeftBra>"
 
 let pRightBra : Parser<unit,unit> = 
-    pOptSpace >>. skipChar ']' 
+    pOptSpace >>. skipChar ']' <!> "<pRightBra>"
 
 // Parenthesized expression, allowing spaces inside
 let pParens : Parser<Ast,unit> =
@@ -114,7 +114,7 @@ let pParens : Parser<Ast,unit> =
 // ============================================================================
 
 let pComma : Parser<unit,unit> = 
-    pOptSpace >>. skipChar ',' >>. pOptSpace
+    pOptSpace >>. skipChar ',' >>. pOptSpace <!> "<pComma>"
 
 let pExprList : Parser<Ast list,unit> =
     (pipe2
