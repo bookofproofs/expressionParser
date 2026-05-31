@@ -43,16 +43,16 @@ type Ast =
 
 // No whitespace allowed at this point
 let pNoSpace : Parser<unit,unit> =
-    notFollowedBy (skipMany1 (anyOf " \t\r\n")) <?> "<no whitespace>" <!> "<pNoSpace>"
+    notFollowedBy (skipMany1 (anyOf " \t\r\n")) <?> "<no whitespace>" <!> "pNoSpace"
 
 // At least one whitespace required, but NOT directly before ), ] or ,
 let pSpace : Parser<unit,unit> =
     skipMany1 (anyOf " \t\r\n")
-    >>% () <?> "<significant whitespace>" <!> "<pSpace>"
+    >>% () <?> "<significant whitespace>" <!> "pSpace"
 
 // Optional whitespace (for comma lists etc.)
 let pOptSpace : Parser<unit,unit> =
-    skipMany (anyOf " \t\r\n") >>% () <?> "<whitespace>" <!> "<pOptSpace>"
+    skipMany (anyOf " \t\r\n") >>% () <?> "<whitespace>" <!> "pOptSpace"
 
 // ============================================================================
 // Operator sets
@@ -60,15 +60,15 @@ let pOptSpace : Parser<unit,unit> =
 
 // Prefix operators: - ~ #
 let pPrefixSet : Parser<string,unit> =
-    many1Satisfy (fun c -> "-~#".Contains(c)) <!> "<pPrefixSet>"
+    many1Satisfy (fun c -> "-~#".Contains(c)) <!> "pPrefixSet"
 
 // Postfix operators: ! ' /
 let pPostfixSet : Parser<string,unit> =
-    many1Satisfy (fun c -> "!'/".Contains(c)) <!> "<pPostfixSet>"
+    many1Satisfy (fun c -> "!'/".Contains(c)) <!> "pPostfixSet"
 
 // Infix operators: + - * /
 let pInfixSet : Parser<string,unit> =
-    many1Satisfy (fun c -> "+-*/".Contains(c)) <!> "<pInfixSet>"
+    many1Satisfy (fun c -> "+-*/".Contains(c)) <!> "pInfixSet"
 
 // ============================================================================
 // Forward declaration
@@ -93,16 +93,16 @@ let pLiteral : Parser<Ast,unit> =
     ] <!> "<pLiteral>"
 
 let pLeftPar : Parser<unit,unit> = 
-    skipChar '(' >>. pOptSpace <!> "<pLeftPar>"
+    skipChar '(' >>. pOptSpace <!> "pLeftPar"
 
 let pRightPar : Parser<unit,unit> = 
-    pOptSpace >>. skipChar ')' <!> "<pRightPar>"
+    pOptSpace >>. skipChar ')' <!> "pRightPar"
 
 let pLeftBra : Parser<unit,unit> = 
-    skipChar '[' >>. pOptSpace <!> "<pLeftBra>"
+    skipChar '[' >>. pOptSpace <!> "pLeftBra"
 
 let pRightBra : Parser<unit,unit> = 
-    pOptSpace >>. skipChar ']' <!> "<pRightBra>"
+    pOptSpace >>. skipChar ']' <!> "pRightBra"
 
 // Parenthesized expression, allowing spaces inside
 let pParens : Parser<Ast,unit> =
@@ -114,7 +114,7 @@ let pParens : Parser<Ast,unit> =
 // ============================================================================
 
 let pComma : Parser<unit,unit> = 
-    pOptSpace >>. skipChar ',' >>. pOptSpace <!> "<pComma>"
+    pOptSpace >>. skipChar ',' >>. pOptSpace <!> "pComma"
 
 let pExprList : Parser<Ast list,unit> =
     (pipe2
