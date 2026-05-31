@@ -59,16 +59,16 @@ let pOptSpace : Parser<unit,unit> =
 // ============================================================================
 
 // Prefix operators: - ~ #
-let pPrefixOp : Parser<string,unit> =
-    many1Satisfy (fun c -> "-~#".Contains(c)) <!> "<pPrefixOp>"
+let pPrefixSet : Parser<string,unit> =
+    many1Satisfy (fun c -> "-~#".Contains(c)) <!> "<pPrefixSet>"
 
 // Postfix operators: ! ' /
-let pPostfixOp : Parser<string,unit> =
-    many1Satisfy (fun c -> "!'/".Contains(c)) <!> "<pPostfixOp>"
+let pPostfixSet : Parser<string,unit> =
+    many1Satisfy (fun c -> "!'/".Contains(c)) <!> "<pPostfixSet>"
 
 // Infix operators: + - * /
-let pInfixOp : Parser<string,unit> =
-    many1Satisfy (fun c -> "+-*/".Contains(c)) <!> "<pInfixOp>"
+let pInfixSet : Parser<string,unit> =
+    many1Satisfy (fun c -> "+-*/".Contains(c)) <!> "<pInfixSet>"
 
 // ============================================================================
 // Forward declaration
@@ -166,7 +166,7 @@ let pAtom : Parser<Ast,unit> =
 let pPostfixExpr : Parser<Ast,unit> =
     pipe2
         pAtom
-        (many (attempt (pNoSpace >>. pPostfixOp)) <?> "<postfix symbol>")
+        (many (attempt (pNoSpace >>. pPostfixSet)) <?> "<postfix operator>")
         (fun expr postfixes ->
             List.fold (fun acc op -> Postfix(op, acc)) expr postfixes
         ) <!> "pPostfixExpr"
@@ -175,7 +175,7 @@ let pPostfixExpr : Parser<Ast,unit> =
 // PREFIX: prefix* postfixExpr
 let pPrefixExpr : Parser<Ast,unit> =
     pipe2
-        (many (attempt (pPrefixOp .>> pNoSpace)) <?> "<prefix symbol>")
+        (many (attempt (pPrefixSet .>> pNoSpace)) <?> "<prefix operator>")
         pPostfixExpr
         (fun prefixes expr ->
             List.foldBack (fun op acc -> Prefix(op, acc)) prefixes expr
@@ -185,7 +185,7 @@ let pPrefixExpr : Parser<Ast,unit> =
 let pInfixExpr : Parser<Ast,unit> =
     pipe2
         pPrefixExpr
-        (many (attempt (pSpace >>. pInfixOp .>> pSpace .>>. pPrefixExpr)) )
+        (many (attempt (pSpace >>. pInfixSet .>> pSpace .>>. pPrefixExpr)) <?> "<infix operator>")
         (fun first rest ->
             List.fold (fun oper1 (op, oper2) -> Infix(op, oper1, oper2)) first rest
         ) <!> "pInfixExpr"
