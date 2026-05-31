@@ -133,15 +133,12 @@ let pArgs : Parser<Ast list,unit> =
 let pCoords : Parser<Ast list,unit> =
     pLeftBra >>. pExprList .>> pRightBra <!> "pCoords"
 
-let pCallOrCoordSuffixCore : Parser<(Ast -> Ast),unit> =
+let pCallOrCoordSuffix : Parser<(Ast -> Ast),unit> =
     pNoSpace >>.
     choice [
-        pArgs   |>> fun args   -> fun bas -> Call(bas, args)
-        pCoords |>> fun coords -> fun bas -> Coord(bas, coords)
-    ]
-
-let pCallOrCoordSuffix =
-    pCallOrCoordSuffixCore <!> "pCallOrCoordSuffix"
+        pArgs   |>> fun args   -> fun calling -> Call(calling, args)
+        pCoords |>> fun coords -> fun withCoords -> Coord(withCoords, coords)
+    ] <!> "pCallOrCoordSuffix"
 
 // Literal extended by optional call/coord chains
 let pOperandAtom : Parser<Ast,unit> =
