@@ -32,8 +32,8 @@ type Ast =
     | G
     | Parens of Ast
     | Prefix of string * Ast
-    | Postfix of Ast * string
-    | Infix of Ast * string * Ast
+    | Postfix of string * Ast 
+    | Infix of string * Ast * Ast
     | Call of Ast * Ast list      // a(...)
     | Coord of Ast * Ast list     // a[...]
 
@@ -168,7 +168,7 @@ let pPostfixExpr : Parser<Ast,unit> =
         pAtom
         (many (attempt (pNoSpace >>. pPostfixOp)) <?> "<postfix symbol>")
         (fun expr postfixes ->
-            List.fold (fun acc op -> Postfix(acc, op)) expr postfixes
+            List.fold (fun acc op -> Postfix(op, acc)) expr postfixes
         ) <!> "pPostfixExpr"
 
      
@@ -187,7 +187,7 @@ let pInfixExpr : Parser<Ast,unit> =
         pPrefixExpr
         (many (attempt (pSpace >>. pInfixOp .>> pSpace .>>. pPrefixExpr)) )
         (fun first rest ->
-            List.fold (fun acc (op, rhs) -> Infix(acc, op, rhs)) first rest
+            List.fold (fun oper1 (op, oper2) -> Infix(op, oper1, oper2)) first rest
         ) <!> "pInfixExpr"
 
 pExprRef.Value <- pInfixExpr <!> "pExpr"
