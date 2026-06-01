@@ -33,7 +33,7 @@ type Ast =
     | Parens of Ast
     | Prefix of string * Ast
     | Postfix of string * Ast 
-    | Infix of string * Ast * Ast
+    | Infix of (Ast * string option) list
     | Call of Ast * Ast list      // a(...)
     | Coord of Ast * Ast list     // a[...]
 
@@ -182,9 +182,21 @@ let pPrefixExpr : Parser<Ast,unit> =
 let pInfixExpr : Parser<Ast,unit> =
     pipe2
         pPrefixExpr
-        (many (attempt (pSpace >>. pInfixSet .>> pSpace .>>. pPrefixExpr)) <?> "<infix operator>")
+        (many (attempt (pSpace >>. pInfixSet .>> pSpace .>>. pPrefixExpr)))
         (fun first rest ->
-            List.fold (fun oper1 (op, oper2) -> Infix(op, oper1, oper2)) first rest
+            // rest = [("+", B); ("-", C); ("*", D)]
+
+            let operands =
+                first :: (rest |> List.map snd)
+                // [A; B; C; D]
+
+            let ops =
+                (rest |> List.map (fun (op, _) -> Some op))
+                @ [None]
+                // [Some "+"; Some "-"; Some "*"; None]
+
+            Infix (List.zip operands ops)
+            // Infix [ (A, Some "+"); (B, Some "-"); (C, Some "*"); (D, None) ]
         ) <!> "pInfixExpr"
 
 pExprRef.Value <- pInfixExpr <!> "pExpr"

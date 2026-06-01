@@ -59,8 +59,64 @@ type TestCases () =
     [<DataRow("47", "a( b )[ c ]( d )[ e ]")>]
     [<DataRow("48", "a( b , c )[ d , e ]!'")>]
     [<DataRow("49", "~a(b[c], d[e(f)] )")>]
+    [<DataRow("50", "a + b - c * d")>]
     [<TestMethod>]
     member this.TestMethodPassing (no:string, code:string) =
+        let res = parse code
+        let actual = sprintf "%O" res 
+        printf "%O" actual
+        Assert.IsTrue(actual.StartsWith("Success:"))
+
+    // Single operand
+    [<DataRow("01", "a")>]
+
+    // Single operator
+    [<DataRow("02", "a + b")>]
+
+    // Two operators, left‑to‑right
+    [<DataRow("03", "a + b - c")>]
+
+    // Mixed precedence (should still flatten)
+    [<DataRow("04", "a + b * c")>]
+    [<DataRow("05", "a * b + c")>]
+    [<DataRow("06", "a + b - c * d")>]
+
+    // Parentheses (your parser keeps Parens nodes)
+    [<DataRow("07", "(a + b) * c")>]
+    [<DataRow("08", "a * (b + c)")>]
+    [<DataRow("09", "(a)")>]
+
+    // Prefix operators
+    [<DataRow("10", "-a + b")>]
+    [<DataRow("11", "a + -b")>]
+
+    // Postfix operators
+    [<DataRow("12", "a! + b")>]
+    [<DataRow("13", "a + b!")>]
+
+    // Combined prefix + postfix
+    [<DataRow("14", "-a! + b")>]
+
+    // Long chain
+    [<DataRow("15", "a + b + c + d + e + f")>]
+
+    [<DataRow("17", "a   +    b   -   c")>]
+
+    // Nested parentheses
+    [<DataRow("19", "((a + b) - (c * d))")>]
+
+    // Call expressions 
+    [<DataRow("20", "a(b) + c")>]
+    [<DataRow("21", "a(b, c) * d")>]
+
+    // Coord expressions 
+    [<DataRow("22", "a[b] + c")>]
+
+    // Edge cases
+    [<DataRow("23", "a + b * c / d - e")>]
+    [<DataRow("24", "a / b / c / d")>]
+    [<TestMethod>]
+    member this.TestMethodPassing2 (no:string, code:string) =
         let res = parse code
         let actual = sprintf "%O" res 
         printf "%O" actual
@@ -94,6 +150,9 @@ type TestCases () =
     [<DataRow("25", "a+/b")>]               // infix operator must be surrounded by spaces
     [<DataRow("26", "a +~ b")>]             // invalid infix operator
     [<DataRow("27", "a(b : c)")>]           // invalid comma / infix operator
+    [<DataRow("25", "a * b ^ c")>]          // ^ is no in infix set
+    [<DataRow("26", "   a + b   ")>]        // Whitespace variations
+    [<DataRow("27", "a+b")>]                // Whitespace variations
     [<TestMethod>]
     member this.TestMethodFailing (no:string, code:string) =
         let res = parse code
